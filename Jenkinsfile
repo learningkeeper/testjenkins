@@ -15,8 +15,7 @@ node {
         sh "git fetch && git checkout main && git pull"
         sh "echo \$(date +%s) >> 1.txt"
         sh "git add ."
-        sh '''git commit -m "add ${GIT_COMMIT}"'''
-       
+        sh '''git commit -m "add ${env.GIT_COMMIT}"'''
         withCredentials([usernamePassword(credentialsId: 'joe-git',
         usernameVariable: 'username',
         passwordVariable: 'password')]){
