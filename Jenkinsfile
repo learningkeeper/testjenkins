@@ -12,7 +12,7 @@ node {
         extensions: [],
         userRemoteConfigs: [[credentialsId: 'joe-git', url: 'https://' + (myUrl) ]]])
         try {
-        sh "git fetch && git checkout main"
+        sh "git fetch && git checkout main && git pull"
         sh "echo \$(date +%s) >> 1.txt"
         sh "git add ."
         sh '''git commit -m "add ${GIT_COMMIT}"'''
