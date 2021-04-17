@@ -14,6 +14,7 @@ node {
         userRemoteConfigs: [[credentialsId: 'joe-git', url: 'https://' + (myUrl) ]]])
         try {
         sh "git fetch && git checkout main"
+        sh "git pull --rebase"
         sh "echo \$(date +%s) >> 1.txt"
         sh "git add ."
         sh '''hash=`git log --pretty=format:'%h' -n 1` ; git commit -m "Add last hash ${hash}"'''
