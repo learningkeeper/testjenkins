@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    environment { 
+        myUrl='github.com/learningkeeper/testjenkins.git'
+    }
+    stages {
+        stage('pull code') {
+            steps {
+                        checkout([$class: 'GitSCM', 
+                        branches: [[name: '*/main']], 
+                        extensions: [],
+                        userRemoteConfigs: [[credentialsId: 'joe-git', url: 'https://' + (myUrl) ]]]) 
+                        sh "b=test"
+                        script {
+                        sh 'a=$b'
+                        }
+            }
+        }
+    }
+    post {
+        success {        
+                    script {
+                        if (env.a=="test"){
+                            sh "exit 1"
+                        }
+                    }
+                
+                    withCredentials([usernamePassword(credentialsId: 'joe-git',
+                    usernameVariable: 'username',
+                    passwordVariable: 'password')]){
+                    sh "git fetch && git checkout main"
+                    sh "git pull --rebase"
+                    sh "echo \$(date +%s) >> 1.txt"
+                    sh "git add ."
+                    sh '''hash=`git log --pretty=format:'%h' -n 1` ; git commit -m "Add last hash ${hash}"'''
+                    sh "git push http://$username:$password@$myUrl"
+
+                    }
+            
+                         
+                
+        }
+    }
+}
